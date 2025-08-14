@@ -1,11 +1,19 @@
 body{
-background-color: bisque;
+    background-image: url("https://www.cllc.ca/wp-content/uploads/2019/09/Top-Universities-in-Canada.jpg");
+    background-repeat: no-repeat;        
+    background-size: cover;             
+    background-position: center center;  
+    background-attachment: fixed; 
+
 }
 .top-text{
     text-align: center;
     font-family: "Montserrat";
     font-size: 50px;
-    padding: 30px;
+    padding: 20px;
+    background-color: #f9f8f4; /* A soft yellow for highlighting */
+    border-radius: 8px; /* Adjust this value for more or less rounding */
+    
 }
 .Interact-Zone{
     background-color: #fff;
@@ -16,7 +24,27 @@ background-color: bisque;
     padding: 50px;
 }
 
+img {
+    align-items:center;
+    height: 250px;
+    border-radius: 7%;
+}
+
+ol {
+    text-align:center;
+}
+
+.Image-and-Readmore {
+    display: flex; 
+    flex-direction:column;
+    align-items: center;     
+    gap: 20px;   
+
+}
+
+
 hr{
+    text-align: center;
     color: black;
     margin-left: 10px;
     margin-right: 40px;
@@ -25,9 +53,16 @@ hr{
     text-align: center;
     font-family: "Raleway";
     font-size: 15px;
-    padding: 30px;
+    padding:30px;
     margin: 20px auto 0; 
 }
+
+.bottom-link button {
+    width: 300x;       /* button width */
+    height: 50px;       /* button height */
+    font-size: 20px;    /* bigger text */
+}
+
 a:link{color: rgb(28, 9, 94);
         text-decoration: none;
 }
