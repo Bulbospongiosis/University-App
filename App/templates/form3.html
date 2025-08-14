@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="../static/form.css" /> 
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Sofia">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Winky Rough">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Sorts Mill Goudy">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Literata">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+  <!--<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Literata"> -->
+
+  <title>University Finder</title>
+</head>
+<!------------------------------------------------------------------------------------>
+<body>
+    <h1 class = "top-text"><b>University Finder</b></h1>
+    <div class = "Interact-Zone">
+        <div class="questionnaire">
+            <h2 id = "question1" class="question"> What provinces are you willing to consider?</h2>
+            <form method = "POST" action = "/form">
+            <div id = "selections">
+                <input type = "checkbox" id = "3:1" name = "non-negotiable" value = "3:1"></input>
+                <label for="3:1">Ontario</label>
+                <br>
+                <input type = "checkbox" id = "3:2" name = "non-negotiable" value = "3:2"></input>
+                <label for="3:2">B.C.</label>
+                <br>
+                <input type = "checkbox" id = "3:3" name = "non-negotiable" value = "3:3"></input>
+                <label for="3:3">Québec</label>
+                <br>
+                <input type = "checkbox" id = "3:4" name = "non-negotiable" value = "3:4"></input>
+                <label for="3:4">Alberta</label>
+                <br>
+            </div>
+            </form>
+            <hr>
+            <div class = "sub">
+                <button onclick="window.location.href='/form/question4'">Submit</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class = "bottom-link"><a href ="/">List of Universities</a></div>
+
+    <!--<script src = "Front-Page.js"></script>-->
+</body>

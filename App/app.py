@@ -21,6 +21,15 @@ def form3():
 @app.route("/form/question4", methods=['GET', 'POST'])
 def form4():
     return render_template("form4.html")
+@app.route("/form/question5", methods=['GET', 'POST'])
+def form5():
+    return render_template("form5.html")
+@app.route("/form/question6", methods=['GET', 'POST'])
+def form6():
+    return render_template("form6.html")
+@app.route("/form/question7", methods=['GET', 'POST'])
+def form7():
+    return render_template("form7.html")
 
 
 if __name__ == '__main__':
