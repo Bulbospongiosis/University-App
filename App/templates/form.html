@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="../static/form.css" /> 
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Sofia">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Winky Rough">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Sorts Mill Goudy">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Literata">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+  <!--<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Literata"> -->
+
+  <title>University Finder</title>
+</head>
+<!------------------------------------------------------------------------------------>
+<body>
+    <h1 class = "top-text"><b>University Finder</b></h1>
+    <div class = "Interact-Zone">
+        <div class="questionnaire">
+            <h2 id = "question1" class="question"> What are your Non-Negotiables?</h2>
+            <form method = "POST" action = "/form">
+            <div id = "selections">
+                <input type = "checkbox" id = "tuition" name = "non-negotiable" value = "tuition"></input>
+                <label for="tuition">Tuition Cost</label>
+                <br>
+                <input type = "checkbox" id = "location" name = "non-negotiable" value = "location"></input>
+                <label for="location">University Location</label>
+                <br>
+                <input type = "checkbox" id = "living" name = "non-negotiable" value = "living"></input>
+                <label for="living">Cost of Living</label>
+                <br>
+                <input type = "checkbox" id = "co-op" name = "non-negotiable" value = "co-op"></input>
+                <label for="co-op">Co-op Opportunities</label>
+                <br>
+                <input type = "checkbox" id = "food" name = "non-negotiable" value = "food"></input>
+                <label for="food">Residence Food Plan</label>
+                <br>
+                <input type = "checkbox" id = "extra" name = "non-negotiable" value = "extra"></input>
+                <label for="extra">Quantity of Extracurriculars</label>
+                <br>
+            </div>
+            </form>
+            <hr>
+            <div class = "sub"><button type="submit" onclick="window.loaction.href='/form/question2'"></button></div>
+        </div>
+    </div>
+    
+    <div class = "bottom-link"><a href ="/">List of Universities</a></div>
+
+    <!--<script src = "Front-Page.js"></script>-->
+</body>
