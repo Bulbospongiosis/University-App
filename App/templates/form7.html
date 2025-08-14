@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="../static/form.css" /> 
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Sofia">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Winky Rough">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Sorts Mill Goudy">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Literata">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+  <!--<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Literata"> -->
+
+  <title>University Finder</title>
+</head>
+<!------------------------------------------------------------------------------------>
+<body>
+    <h1 class = "top-text"><b>University Finder</b></h1>
+    <div class = "Interact-Zone">
+        <div class="questionnaire">
+            <h2 id = "question7" class="question"> What is your preference in your university having a vibrant club culture? (Number of clubs)
+</h2>
+            <form method = "POST" action = "/form/question7">
+            <div id = "selections">
+                <input type = "radio" id = "7:1" name = "club-culture" value = "7:1"></input>
+                <label for="7:1">50+ Clubs</label>
+                <br>
+                <input type = "radio" id = "7:2" name = "club-culture" value = "7:2"></input>
+                <label for="7:2">200+ Clubs</label>
+                <br>
+                <input type = "radio" id = "7:3" name = "club-culture" value = "7:3"></input>
+                <label for="7:3">350+ Clubs</label>
+                <br>
+                <input type = "radio" id = "7:4" name = "club-culture" value = "7:4"></input>
+                <label for="7:4">500+ Clubs</label>
+                <br>
+                <input type = "radio" id = "7:5" name = "club-culture" value = "7:5"></input>
+                <label for="7:5">750+ Clubs</label>
+                <br>
+            </div>
+            </form>
+            <hr>
+            <div class = "sub">
+                <button onclick="window.location.href='/form/question6'">Submit</button> //Change /question6 to results later, this is temporary
+            </div>
+        </div>
+    </div>
+    
+    <div class = "bottom-link"><a href ="/">List of Universities</a></div>
+
+    <!--<script src = "Front-Page.js"></script>-->
+</body>
