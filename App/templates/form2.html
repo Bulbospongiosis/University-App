@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="../static/form.css" /> 
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Sofia">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Winky Rough">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Sorts Mill Goudy">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Literata">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+  <!--<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Literata"> -->
+
+  <title>University Finder</title>
+</head>
+<!------------------------------------------------------------------------------------>
+<body>
+    <h1 class = "top-text"><b>University Finder</b></h1>
+    <div class = "Interact-Zone">
+        <div class="questionnaire">
+            <h2 id = "question1" class="question"> What's the most you're willing to pay for tuition?</h2>
+            <form method = "POST" action = "/form">
+            <div id = "selections">
+                <input type = "radio" id = "2:1" name = "non-negotiable" value = "2:1"></input>
+                <label for="2:1">Tuition Cost</label>
+                <br>
+                
+                <br>
+            </div>
+            </form>
+            <hr>
+            <div class = "sub">
+                <button onclick="window.location.href='/form/question3'">Submit</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class = "bottom-link"><a href ="/">List of Universities</a></div>
+
+    <!--<script src = "Front-Page.js"></script>-->
+</body>
