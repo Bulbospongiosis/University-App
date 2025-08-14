@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="../static/form.css" /> 
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Sofia">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Winky Rough">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Sorts Mill Goudy">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Literata">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+  <!--<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Literata"> -->
+
+  <title>University Finder</title>
+</head>
+<!------------------------------------------------------------------------------------>
+<body>
+    <h1 class = "top-text"><b>University Finder</b></h1>
+    <div class = "Interact-Zone">
+        <div class="questionnaire">
+            <h2 id = "question6" class="question"> Do you need to have residence food plan?</h2>
+            <form method = "POST" action = "/form/question6">
+            <div id = "selections">
+                <input type = "checkbox" id = "6:1" name = "food-preference" value = "6:1"></input>
+                <label for="6:1">Yes</label>
+                <br>
+                <input type = "checkbox" id = "6:2" name = "food-preference" value = "6:2"></input>
+                <label for="6:2">No</label>
+                <br>
+            </div>
+            </form>
+            <hr>
+            <div class = "sub">
+                <button onclick="window.location.href='/form/question7'">Submit</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class = "bottom-link"><a href ="/">List of Universities</a></div>
+
+    <!--<script src = "Front-Page.js"></script>-->
+</body>
