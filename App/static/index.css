@@ -3,7 +3,7 @@ body{
     background-repeat: no-repeat;        
     background-size: cover;             
     background-position: center center;  
-    background-attachment: fixed; 
+    background-attachment: fixed;
 
 }
 .top-text{
@@ -42,6 +42,21 @@ ol {
 
 }
 
+#read-more {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    text-decoration: none;
+    color: white;
+    background-color: #0072ce;
+    border-radius: 8px;
+    cursor: pointer;
+    text-align: center;
+}
+
+#read-more:hover {
+    background-color: #005bb5;
+}
 
 hr{
     text-align: center;
@@ -49,18 +64,35 @@ hr{
     margin-left: 10px;
     margin-right: 40px;
 }
-.bottom-link{
+.bottom-link {
     text-align: center;
     font-family: "Raleway";
     font-size: 15px;
-    padding:30px;
+    padding: 30px;
     margin: 20px auto 0; 
 }
 
-.bottom-link button {
-    width: 300x;       /* button width */
-    height: 50px;       /* button height */
-    font-size: 20px;    /* bigger text */
+.bottom-link {
+    text-align: center;
+    font-family: "Raleway";
+    font-size: 15px;
+    padding: 30px;
+    margin: 20px auto 0; 
+}
+
+.bottom-link .btn.primary {
+    display: inline-block;
+    padding: 15px 30px;
+    font-size: 18px;
+    text-decoration: none;
+    color: white;
+    background-color: #0072ce;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.bottom-link .btn.primary:hover {
+    background-color: #005bb5;
 }
 
 a:link{color: rgb(28, 9, 94);
