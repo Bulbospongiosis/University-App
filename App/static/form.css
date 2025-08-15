@@ -25,6 +25,20 @@ body{
     font-family: "Raleway";
     font-size: 20px;
 }
+
+.top-picks {
+    font-family: "Raleway";
+    font-size: 35px;
+    text-align:center;
+}
+
+.uni-list {
+    font-family: "Raleway";
+    font-size: 25px;
+    padding-bottom: 10px;
+    text-align:center;
+    list-style-position: inside
+}
 .select{
     font-family: "Raleway";
     font-size: 15px;
