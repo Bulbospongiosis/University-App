@@ -17,10 +17,10 @@
 </head>
 <!------------------------------------------------------------------------------------>
 <body>
-    <h1 class = "top-text"><b>University Finder</b></h1>
+    <h1 class = "top-text"><b>University Form Questionaire</b></h1>
     <div class = "Interact-Zone">
         <div class="questionnaire">
-            <h2 id = "question1" class="question"> What are your Non-Negotiables?</h2>
+            <h2 id = "question1" class="question"> What are your Non-Negotiables? If None, Click Submit:</h2>
             <form method = "POST" action = "/form/question1">
             <div id = "selections">
                 <input type = "checkbox" id = "tuition" name = "tuition" value = "yes"></input>
@@ -50,7 +50,12 @@
         </div>
     </div>
     
-    <div class = "bottom-link"><a href ="/">List of Universities</a></div>
+    <div         
+        class="bottom-link">
+        <a class="btn primary" id="university-list" href="/">
+            List of Universities
+        </a>
+    </div>
 
     <!--<script src = "Front-Page.js"></script>-->
 </body>
