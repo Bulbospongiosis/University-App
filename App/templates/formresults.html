@@ -21,7 +21,19 @@
     <div class = "Interact-Zone">
         <div class="questionnaire">
             <h2 id = "question1" class="question"> Your Top University Picks Are:</h2>
+            <h2>Universities with Non-Negative Scores</h2>
             
+                <h2>Top 3 Universities</h2>
+            <ol>
+                {% for university, score in results.items() %}
+                    {% if loop.index <= 3 %}
+                        <li>{{ university }} — {{ score }}</li>
+                    {% endif %}
+                {% endfor %}
+</ol>
+
+            
+
             <hr>
             <div>
                 <button onclick="window.location.href='/form/question1'">Restart Form</button>
