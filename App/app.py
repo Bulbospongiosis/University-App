@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, session
+from flask import Flask, render_template, request, session, redirect, url_for
 import json
 
 app = Flask(__name__)
@@ -36,6 +36,7 @@ def form1():
         session['coopnn'] = "co-op" in request.form
         session['foodnn'] = "food" in request.form
         session['extrann'] = "extra" in request.form
+        return redirect("/form/question2")
     return render_template("form.html")
 
 
@@ -44,6 +45,7 @@ def form2():
     if request.method == "POST":
         for i in range(1, 6):
             session[f'cost{i}'] = f"2:{i}" in request.form
+        return redirect("/form/question3")
     return render_template("form2.html")
 
 
@@ -54,6 +56,7 @@ def form3():
         session['BritishColumbia'] = "3:2" in request.form
         session['Quebec'] = "3:3" in request.form
         session['Alberta'] = "3:4" in request.form
+        return redirect("/form/question4")
     return render_template("form3.html")
 
 
@@ -62,6 +65,7 @@ def form4():
     if request.method == "POST":
         for i in range(1, 6):
             session[f'livecost{i}'] = f"4:{i}" in request.form
+        return redirect("/form/question5")
     return render_template("form4.html")
 
 
@@ -71,6 +75,7 @@ def form5():
         session['extensive'] = "5:1" in request.form
         session['limited'] = "5:2" in request.form
         session['noprefer'] = "5:3" in request.form
+        return redirect("/form/question6")
     return render_template("form5.html")
 
 
@@ -79,6 +84,7 @@ def form6():
     if request.method == "POST":
         session['yes'] = "6:1" in request.form
         session['no'] = "6:2" in request.form
+        return redirect("/form/question7")
     return render_template("form6.html")
 
 
@@ -87,6 +93,7 @@ def form7():
     if request.method == "POST":
         for i in range(1, 6):
             session[f'club{i}'] = f"7:{i}" in request.form
+        return redirect("/form/results")
 
     # Reset scores
     scores = {uni: 0 for uni in Unilist}
@@ -164,6 +171,13 @@ def form7():
 
     return render_template("form7.html", results=sorted_dict)
 
+
+
+
+
+@app.route("/form/results")
+def results():
+    return render_template("formresults.html")
 
 if __name__ == '__main__':
     app.run(debug=True)
