@@ -23,7 +23,7 @@
             <h2 id = "question1" class="top-picks"> Your Top University Picks Are:</h2>
             <ol>
                 {% for university, score in results.items() %}
-                    {% if loop.index <= 3 %}
+                    {% if loop.index <= 3 and score >= 0 %}
                         <li class = "uni-list"><a href = "/#{{ university }}">{{ university }}</a></li>
                     {% endif %}
                 {% endfor %}

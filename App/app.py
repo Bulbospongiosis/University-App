@@ -15,7 +15,7 @@ json_string = [
     {"University": "McMaster University", "Tuition": 12000, "Location": "Ontario", "Living": 1500, "Co-op": 1, "Food": 1, "Extra": 300, "Rank": 7},
     {"University": "Queens University in Kingston", "Tuition": 6153, "Location": "Ontario", "Living": 3489, "Co-op": 2, "Food": 1, "Extra": 300, "Rank": 8},
     {"University": "University of Calgary", "Tuition": 7200, "Location": "Alberta", "Living": 1900, "Co-op": 1, "Food": 1, "Extra": 300, "Rank": 9},
-    {"University": "University of Waterloo", "Tuition": 13500, "Location": "Ontario", "Living": 1900, "Co-op": 2, "Food": 1, "Extra": 200, "Rank": 10}
+    {"University": "University of Waterloo", "Tuition": 11000, "Location": "Ontario", "Living": 1900, "Co-op": 2, "Food": 1, "Extra": 200, "Rank": 10}
 ]
 
 Uniname = {uni["University"]: 0 for uni in json_string}
@@ -119,13 +119,22 @@ def results():
         
 
     # --- Location ---
-    for loc in ["Ontario", "BritishColumbia", "Quebec", "Alberta"]:
-        if session.get(loc):
-            for uni in json_string:
-                if uni["Location"] == (loc if loc != "BritishColumbia" else "BC"):
-                    scores[uni["University"]] += 1
-                elif session.get('locationnn'):
-                    scores[uni["University"]] = -1e9
+    selected_locations = []
+    if session.get("Ontario"):
+        selected_locations.append("Ontario")
+    if session.get("BritishColumbia"):
+        selected_locations.append("BC")
+    if session.get("Quebec"):
+        selected_locations.append("Quebec")
+    if session.get("Alberta"):
+        selected_locations.append("Alberta")
+
+    if selected_locations:  # User picked something
+        for uni in json_string:
+            if uni["Location"] in selected_locations:
+                scores[uni["University"]] += 1
+            elif session.get('locationnn'):  # Non-negotiable
+                scores[uni["University"]] = -1e9
 
     # --- Living cost ---
     living_limits = {5: float('inf'), 4: 3000, 3: 2500, 2: 2000, 1: 1500}
