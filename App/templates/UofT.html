@@ -1,0 +1,622 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <!--
+    University Detail Page (iOS 18 Style) HTML Template
+    Goals:
+    1) Pure frontend single file, suitable as a "University Picker" recommendation result detail page landing template
+    2) Style reference iOS 18: large titles, frosted glass cards, rounded corners, light shadows, segmented controls, light/dark adaptive
+    3) Data binding through data-bind attributes, supporting injection from URL parameters or built-in JSON
+
+    Usage:
+    - Open this file directly to see sample data (University of Toronto).
+    - If your questionnaire page jumps to detail page, you can carry ?id=uoft or ?id=mcgill parameters.
+    - You can also load from backend API, or inject window.UNI_DATA = {...} then call setUniversity.
+  -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="color-scheme" content="light dark" />
+  <title data-bind="name">University Detail</title>
+  <style>
+    /* Design variables: colors, border radius, shadows, dimensions */
+    :root {
+      --bg: #f5f6f8;
+      --text: #0b0b0c;
+      --secondary: #6b7280;
+      --tint: #007aff; /* iOS Blue */
+      --card: rgba(255,255,255,0.6);
+      --hairline: rgba(0,0,0,0.12);
+      --radius: 20px;
+      --shadow: 0 12px 36px rgba(0,0,0,0.08);
+      --maxw: 980px;
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+      --cta-h: 84px;               /* approximate fixed CTA bar height */
+      --extra-scroll: 140px;       /* extra space so you can scroll past the bottom */
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0c0c0e;
+        --text: #f5f5f7;
+        --secondary: #a1a1aa;
+        --tint: #0a84ff;
+        --card: rgba(22,22,24,0.55);
+        --hairline: rgba(255,255,255,0.12);
+        --shadow: 0 12px 36px rgba(0,0,0,0.4);
+      }
+    }
+
+    html, body { height: 100%; }
+    html { scroll-padding-bottom: calc(var(--cta-h) + 40px); }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+      background: radial-gradient(1000px 600px at 10% -10%, #eaf2ff 0%, transparent 50%),
+                  radial-gradient(800px 500px at 110% 0%, #ffe6f2 0%, transparent 55%),
+                  var(--bg);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Top Hero: campus image + gradient overlay + large title */
+    .hero {
+      position: relative;
+      height: clamp(220px, 32vh, 360px);
+      border-bottom: 1px solid var(--hairline);
+      overflow: hidden;
+    }
+    .hero .img {
+      position: absolute;
+      inset: 0;
+      /* use CSS var so JS can change it per school */
+      background-image: var(--hero-img);
+      background-size: contain;           /* show the entire image */
+      background-position: center;
+      background-repeat: no-repeat;       /* avoid tiling */
+      transform: none;
+      filter: none;
+    }
+    /* blurred cover layer to fill any side gaps so there are no white bars */
+    .hero .img::before {
+      content: "";
+      position: absolute; inset: -2%;     /* slight bleed to hide blur edges */
+      background-image: var(--hero-img);
+      background-size: cover;             /* fill container */
+      background-position: center;
+      background-repeat: no-repeat;
+      filter: blur(16px) saturate(1.05) contrast(1.02) brightness(0.95);
+      transform: scale(1.02);
+      z-index: -1;                        /* sit behind the sharp image */
+    }
+    .hero::after { /* Top gradient to enhance readability */
+      content: "";
+      position: absolute; inset: 0;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.35), rgba(0,0,0,0.15) 40%, transparent 65%);
+      pointer-events: none;
+    }
+    .hero .title-wrap {
+      position: absolute; left: 16px; right: 16px; bottom: 18px;
+      margin: 0 auto; max-width: var(--maxw);
+      color: white;
+      text-shadow: 0 2px 12px rgba(0,0,0,0.35);
+    }
+    .subtitle {
+      font-size: 14px; opacity: 0.9;
+    }
+    .large-title {
+      font-size: clamp(28px, 5.2vw, 40px);
+      font-weight: 700;
+      letter-spacing: -0.015em;
+      line-height: 1.1;
+    }
+
+    /* Top navigation bar (collapses large title after scrolling) */
+    .navbar {
+      position: sticky; top: 0; z-index: 50;
+      backdrop-filter: saturate(180%) blur(16px);
+      -webkit-backdrop-filter: saturate(180%) blur(16px);
+      background: var(--card);
+      border-bottom: 1px solid var(--hairline);
+    }
+    .navbar .row { max-width: var(--maxw); margin: 0 auto; display: flex; align-items: center; gap: 12px; padding: 10px 16px; }
+    .navbar .mini-title { font-weight: 600; font-size: 17px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .navbar .spacer { flex: 1; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 10px 14px; border-radius: 999px; border: 1px solid var(--hairline);
+      background: linear-gradient(180deg, rgba(255,255,255,0.7), rgba(255,255,255,0.5));
+      box-shadow: var(--shadow);
+      cursor: pointer; user-select: none; text-decoration: none; color: var(--text);
+    }
+    @media (prefers-color-scheme: dark) {
+      .btn { background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.04)); }
+    }
+    .btn.primary { border-color: transparent; background: var(--tint); color: white; box-shadow: 0 8px 24px rgba(10,132,255,0.35); }
+
+    /* Main container and cards */
+    .container {
+      max-width: var(--maxw);
+      margin: 18px auto;
+      /* add bottom padding so fixed CTA doesn't cover last content and allow extra scroll */
+      padding: 0 16px calc(var(--cta-h) + var(--safe-bottom) + var(--extra-scroll));
+    }
+    .card {
+      background: var(--card);
+      backdrop-filter: saturate(180%) blur(16px);
+      -webkit-backdrop-filter: saturate(180%) blur(16px);
+      border: 1px solid var(--hairline);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 16px;
+    }
+    .section { display: grid; gap: 12px; }
+    .section h2 { font-size: 20px; margin: 0; }
+    /* Free OSM map container */
+    #osm-map { height: 260px; border: 1px solid var(--hairline); border-radius: 16px; overflow: hidden; background: rgba(127,127,127,0.08); }
+    .muted { color: var(--secondary); }
+
+    /* Tags and status capsules */
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+    .chip {
+      font-size: 13px; padding: 6px 10px; border-radius: 999px; border: 1px solid var(--hairline);
+      background: linear-gradient(180deg, rgba(255,255,255,0.8), rgba(255,255,255,0.6));
+    }
+    @media (prefers-color-scheme: dark) {
+      .chip { background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.06)); }
+    }
+
+    /* Statistics grid */
+    .grid { display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
+    .stat { padding: 14px; border-radius: 16px; border: 1px solid var(--hairline); background: rgba(255,255,255,0.5); }
+    @media (prefers-color-scheme: dark) {
+      .stat { background: rgba(255,255,255,0.06); }
+    }
+    .stat .label { font-size: 12px; color: var(--secondary); }
+    .stat .value { font-size: 18px; font-weight: 700; }
+
+    /* Segmented controls (Overview / Programs / Costs / Admissions / Co-op / Reviews) */
+    .segmented { display: flex; gap: 6px; padding: 6px; border-radius: 12px; border: 1px solid var(--hairline); background: rgba(127,127,127,0.08); }
+    .segment { flex: 1; text-align: center; padding: 10px 12px; border-radius: 10px; font-size: 14px; cursor: pointer; user-select: none; }
+    .segment[aria-selected="true"] { background: var(--tint); color: white; }
+
+    /* Timeline (admission timeline) */
+    .timeline { display: grid; gap: 12px; }
+    .timeline-item { display: grid; grid-template-columns: 24px 1fr; gap: 10px; align-items: start; }
+    .dot { width: 10px; height: 10px; background: var(--tint); border-radius: 50%; margin-top: 6px; box-shadow: 0 0 0 4px rgba(10,132,255,0.15); }
+
+    /* Bottom CTA */
+    .cta-bar {
+      position: fixed; left: 0; right: 0; bottom: 0; z-index: 60;
+      padding: 12px 16px calc(12px + var(--safe-bottom));
+      backdrop-filter: saturate(180%) blur(18px);
+      -webkit-backdrop-filter: saturate(180%) blur(18px);
+      background: var(--card);
+      border-top: 1px solid var(--hairline);
+      display: flex; justify-content: center;
+    }
+    .cta-inner { width: 100%; max-width: var(--maxw); display: flex; gap: 10px; }
+    .cta-inner .btn { flex: 1; justify-content: center; }
+
+    /* Small icons (pure SVG, avoiding external links) */
+    .icon { width: 18px; height: 18px; display: inline-block; vertical-align: -3px; }
+
+    /* Visibility toggle */
+    [hidden] { display: none !important; }
+  </style>
+  <!-- Leaflet (Free, OpenStreetMap) -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+</head>
+<body>
+  <!-- Top Hero: can use school main image, overlay gradient, place location and large title in bottom left -->
+  <header class="hero" role="banner">
+    <div class="img" aria-hidden="true" style="--hero-img: url('https://www.toronto.ca/wp-content/uploads/2017/07/96b4-University-College.png')"></div>
+    <div class="title-wrap">
+      <div class="subtitle" id="sub">📍 <span data-bind="location">Ontario · Toronto</span></div>
+      <h1 class="large-title" data-bind="name">University of Toronto</h1>
+    </div>
+  </header>
+
+  <!-- Scrolling navigation bar: left back/favorite, center title, right apply button -->
+  <nav class="navbar" role="navigation" aria-label="Top controls">
+    <div class="row">
+      <a class="btn" href="javascript:history.back()" aria-label="Back">
+        <!-- Left arrow icon -->
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+        Back
+      </a>
+      <div class="mini-title" data-bind="name">University of Toronto</div>
+      <div class="spacer"></div>
+      <button class="btn" id="saveBtn" aria-pressed="false" aria-label="Save">
+        <!-- Heart icon -->
+        <svg class="icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 21s-6.716-4.545-9.428-7.257A5.5 5.5 0 1112 6.343a5.5 5.5 0 119.428 7.4C18.716 16.455 12 21 12 21z"/></svg>
+        Save
+      </button>
+      <a class="btn primary" id="topApply" href="https://future.utoronto.ca/how-to-apply" target="_blank" rel="noopener" aria-label="Apply now">Apply Now</a>
+    </div>
+  </nav>
+
+  <!-- Main container: information cards + segmented content -->
+  <main class="container">
+    <!-- Overview card: tags, ratings, core metrics -->
+    <section class="card section" id="overview">
+      <div class="chips" aria-label="Tags">
+        <!-- Can dynamically add/remove based on school attributes -->
+        <span class="chip" data-bind="type">Public</span>
+        <span class="chip" data-bind="coop">Co-op Extensive</span>
+        <span class="chip" data-bind="food">Meal Plan Available</span>
+        <span class="chip" data-bind="city">City Campus</span>
+      </div>
+
+      <div class="grid">
+        <div class="stat">
+          <div class="label">Reputation</div>
+          <div class="value" style="display:grid;gap:4px;">
+            <div>Strongest Program: <span data-bind="rep_program">Engineering</span></div>
+            <div>QS (World/Canada): <span data-bind="rep_qs_world">#21</span> / <span data-bind="rep_qs_ca">#1</span></div>
+            <div>US News (Global): <span data-bind="rep_usnews_global">#18</span></div>
+            <div>US News (Canada): <span data-bind="rep_usnews_ca">#1</span></div>
+          </div>
+        </div>
+        <div class="stat">
+          <div class="label">Acceptance Rate</div>
+          <div class="value"><span data-bind="acceptance">43%</span></div>
+        </div>
+        <div class="stat">
+          <div class="label">International Students</div>
+          <div class="value"><span data-bind="intl">27%</span></div>
+        </div>
+        <div class="stat">
+          <div class="label">Student Satisfaction</div>
+          <div class="value">⭐️ <span data-bind="rating">4.6</span>/5</div>
+        </div>
+      </div>
+
+      <!-- Introduction -->
+      <p class="muted" data-bind="about">School introduction placeholder text. Place 2-3 high-level overview sentences here, highlighting research strengths, urban advantages, and employment resources.</p>
+
+      <!-- Segmented controls -->
+      <div class="segmented" role="tablist" aria-label="Sections">
+        <div class="segment" role="tab" aria-selected="true" data-target="#tab-overview">Overview</div>
+        <div class="segment" role="tab" aria-selected="false" data-target="#tab-programs">Programs</div>
+        <div class="segment" role="tab" aria-selected="false" data-target="#tab-costs">Costs</div>
+        <div class="segment" role="tab" aria-selected="false" data-target="#tab-admissions">Admissions</div>
+        <div class="segment" role="tab" aria-selected="false" data-target="#tab-coop">Co-op</div>
+        <div class="segment" role="tab" aria-selected="false" data-target="#tab-reviews">Reviews</div>
+      </div>
+    </section>
+
+    <!-- Tab: Overview - in-depth introduction and map -->
+    <section class="section" id="tab-overview">
+      <div class="card">
+        <h2>Institution Highlights</h2>
+        <ul class="muted">
+          <li>Research Strengths: <span data-bind="strengths">AI, Engineering, Business</span></li>
+          <li>Location: <span data-bind="location">Toronto, Ontario</span>, convenient public transportation</li>
+          <li>Graduate Outcomes: <span data-bind="outcomes">92% employment rate within 6 months of graduation</span></li>
+        </ul>
+      </div>
+      <div class="card">
+        <h2>Campus Location</h2>
+        <p class="muted" id="campusAddress" data-bind="address">[Campus address here]</p>
+        <div id="osm-map" aria-label="OpenStreetMap preview" hidden></div>
+        <div class="chips" style="margin-top:10px;">
+          <a class="chip" id="openInOSM" href="#" target="_blank" rel="noopener">Open in OpenStreetMap</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tab: Programs - program list (example in chip format) -->
+    <section class="section" id="tab-programs" hidden>
+      <div class="card">
+        <h2>Popular Undergraduate Programs</h2>
+        <div class="chips" data-bind-list="programs">
+          <!-- Example: <span class='chip'>Computer Engineering (Co-op)</span> -->
+        </div>
+      </div>
+      <div class="card">
+        <h2>Faculties/Departments</h2>
+        <div class="chips" data-bind-list="faculties"></div>
+      </div>
+    </section>
+
+    <!-- Tab: Costs - cost overview -->
+    <section class="section" id="tab-costs" hidden>
+      <div class="card">
+        <h2>Annual Cost Estimate</h2>
+        <div class="grid">
+          <div class="stat">
+            <div class="label">Tuition/Year</div>
+            <div class="value" data-bind="tuition">$6,590</div>
+          </div>
+          <div class="stat">
+            <div class="label">Living Expenses/Month</div>
+            <div class="value" data-bind="living">$1,800</div>
+          </div>
+          <div class="stat">
+            <div class="label">Additional Fees/Year</div>
+            <div class="value" data-bind="extra">$1,000</div>
+          </div>
+          <div class="stat">
+            <div class="label">Total/Year (Estimate)</div>
+            <div class="value" id="totalCost">$-</div>
+          </div>
+        </div>
+        <p class="muted">Note: Above are example budgets, actual costs subject to official website. Living expenses calculated for 12 months.</p>
+      </div>
+      <div class="card">
+        <h2>Scholarships</h2>
+        <ul class="muted" data-bind-list="scholarships">
+          <!-- <li>Entrance Scholarship · up to $2,000</li> -->
+        </ul>
+      </div>
+    </section>
+
+    <!-- Tab: Admissions - admission requirements and timeline -->
+    <section class="section" id="tab-admissions" hidden>
+      <div class="card">
+        <h2>Basic Requirements</h2>
+        <ul class="muted">
+          <li>Academic: <span data-bind="requirements">High school graduation/completion of preparatory courses, requires relevant subject grades</span></li>
+          <li>Language: <span data-bind="language">IELTS 6.5 (no less than 6 in each component) or equivalent</span></li>
+        </ul>
+      </div>
+      <div class="card">
+        <h2>Timeline</h2>
+        <div class="timeline" data-bind-list="timeline">
+          <!--
+          <div class="timeline-item">
+            <div class="dot"></div>
+            <div><strong>Nov 1</strong><br><span class="muted">Early Action opens</span></div>
+          </div>
+          -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Tab: Co-op - internship/cooperative education -->
+    <section class="section" id="tab-coop" hidden>
+      <div class="card">
+        <h2>Co-op Overview</h2>
+        <p class="muted" data-bind="coopDetail">Cooperative education covers engineering, computer science, business, etc., with average paid internships of 4-8 months.</p>
+      </div>
+      <div class="card">
+        <h2>Partner Companies Examples</h2>
+        <div class="chips" data-bind-list="partners"></div>
+      </div>
+    </section>
+
+    <!-- Tab: Reviews - student reviews -->
+    <section class="section" id="tab-reviews" hidden>
+      <div class="card">
+        <h2>Student Hot Reviews</h2>
+        <ul class="muted" data-bind-list="reviews"></ul>
+      </div>
+    </section>
+  </main>
+
+  <!-- Bottom fixed CTA: consult/apply -->
+  <div class="cta-bar" role="contentinfo">
+    <div class="cta-inner">
+      <a class="btn" href="mailto:student.recruitment@utoronto.ca">
+        <!-- Chat bubble icon -->
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a4 4 0 0 1-4 4H7l-4 4V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z"/></svg>
+        Consult
+      </a>
+      <a class="btn primary" id="apply" href="https://future.utoronto.ca/how-to-apply" target="_blank" rel="noopener">
+        <!-- Lightning icon -->
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2L3 14h7l-1 8 10-12h-7z"/></svg>
+        Apply Now
+      </a>
+    </div>
+  </div>
+
+  <script>
+    // Initialize free map (Leaflet + OpenStreetMap) when coordinates are available
+    function initOSM(data) {
+      try {
+        const mapDiv = document.getElementById('osm-map');
+        if (!mapDiv || !window.L) return;
+        const hasCoords = data && data.map && typeof data.map.lat === 'number' && typeof data.map.lng === 'number';
+        if (!hasCoords) return; // no coordinates, keep hidden
+
+        mapDiv.hidden = false;
+        const map = L.map(mapDiv, { scrollWheelZoom: false }).setView([data.map.lat, data.map.lng], data.map.zoom || 15);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          maxZoom: 19,
+          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+        L.marker([data.map.lat, data.map.lng]).addTo(map).bindPopup(data.name || 'Campus');
+
+        // External OSM deep link
+        const link = document.getElementById('openInOSM');
+        if (link) {
+          const z = data.map.zoom || 15;
+          link.href = `https://www.openstreetmap.org/?mlat=${data.map.lat}&mlon=${data.map.lng}#map=${z}/${data.map.lat}/${data.map.lng}`;
+        }
+      } catch (e) {
+        console.warn('OSM init failed:', e);
+      }
+    }
+    // Simple utility function: get URL query parameters
+    function getQueryParam(key) {
+      const url = new URL(location.href);
+      return url.searchParams.get(key);
+    }
+
+    // Currency formatting (can be adjusted based on region)
+    const fmtCurrency = (n) => new Intl.NumberFormat('en-CA', { style: 'currency', currency: 'CAD', maximumFractionDigits: 0 }).format(n);
+
+    // Binding function: render data object to page according to data-bind / data-bind-list
+    function setUniversity(data) {
+      // Title and basic fields
+      document.querySelectorAll('[data-bind]').forEach(el => {
+        const key = el.getAttribute('data-bind');
+        const v = data[key];
+        if (v !== undefined && v !== null) {
+          // Cost fields automatically formatted
+          if (['tuition', 'living', 'extra'].includes(key) && typeof v === 'number') {
+            el.textContent = fmtCurrency(v);
+          } else {
+            el.textContent = v;
+          }
+        }
+      });
+
+      // Update hero image per-school if provided
+      const heroImg = document.querySelector('.hero .img');
+      if (heroImg && data.image) {
+        heroImg.style.setProperty('--hero-img', `url('${data.image}')`);
+      }
+
+      // Update Apply button link per-school if provided
+      const applyBtn = document.getElementById('apply');
+      if (applyBtn && data.applyUrl) {
+        applyBtn.href = data.applyUrl;
+      }
+      const topApply = document.getElementById('topApply');
+      if (topApply && data.applyUrl) {
+        topApply.href = data.applyUrl;
+      }
+
+      // Configure OpenStreetMap link and map visibility
+      const osmLink = document.getElementById('openInOSM');
+      const osmDiv = document.getElementById('osm-map');
+      if (data.map && typeof data.map.lat === 'number' && typeof data.map.lng === 'number') {
+        const z = data.map.zoom || 15;
+        if (osmLink) osmLink.href = `https://www.openstreetmap.org/?mlat=${data.map.lat}&mlon=${data.map.lng}#map=${z}/${data.map.lat}/${data.map.lng}`;
+        if (osmDiv) osmDiv.hidden = false;
+      } else {
+        if (osmDiv) osmDiv.hidden = true;
+      }
+
+      // List binding (programs, faculties, scholarships, timeline, partners, reviews)
+      document.querySelectorAll('[data-bind-list]').forEach(host => {
+        const key = host.getAttribute('data-bind-list');
+        const list = data[key] || [];
+        host.innerHTML = '';
+        list.forEach(item => {
+          // Support string or object
+          if (typeof item === 'string') {
+            // Default render as chip or li
+            if (host.classList.contains('chips')) {
+              const span = document.createElement('span');
+              span.className = 'chip';
+              span.textContent = item;
+              host.appendChild(span);
+            } else {
+              const li = document.createElement('li');
+              li.textContent = item;
+              host.appendChild(li);
+            }
+          } else if (item && typeof item === 'object') {
+            // Timeline specific: { date, text }
+            if (host.classList.contains('timeline')) {
+              const wrap = document.createElement('div');
+              wrap.className = 'timeline-item';
+              wrap.innerHTML = `<div class="dot"></div><div><strong>${item.date || ''}</strong><br><span class="muted">${item.text || ''}</span></div>`;
+              host.appendChild(wrap);
+            } else {
+              const li = document.createElement('li');
+              li.textContent = item.text || JSON.stringify(item);
+              host.appendChild(li);
+            }
+          }
+        });
+      });
+
+      // Calculate annual total cost: tuition + extra fees + living expenses*12
+      const tuition = Number(data.tuition || 0);
+      const extra = Number(data.extra || 0);
+      const living = Number(data.living || 0) * 12;
+      const total = tuition + extra + living;
+      const totalEl = document.getElementById('totalCost');
+      if (totalEl) totalEl.textContent = total ? fmtCurrency(total) : '—';
+
+      // Update <title>
+      const titleEl = document.querySelector('title[data-bind="name"]');
+      if (titleEl && data.name) titleEl.textContent = data.name;
+    }
+
+    // Segmented controls: switch Tab content areas
+    const segmented = document.querySelector('.segmented');
+    segmented?.addEventListener('click', (e) => {
+      const seg = e.target.closest('.segment');
+      if (!seg) return;
+      const target = seg.getAttribute('data-target');
+      if (!target) return;
+
+      document.querySelectorAll('.segment').forEach(s => s.setAttribute('aria-selected', 'false'));
+      seg.setAttribute('aria-selected', 'true');
+
+      document.querySelectorAll('main > section[id^="tab-"]').forEach(sec => sec.hidden = true);
+      const pane = document.querySelector(target);
+      if (pane) pane.hidden = false;
+
+      // Scroll to above segmented area for "snap" feeling (iOS style)
+      document.getElementById('overview')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+
+    // Save button state toggle (frontend example only)
+    const saveBtn = document.getElementById('saveBtn');
+    saveBtn?.addEventListener('click', () => {
+      const pressed = saveBtn.getAttribute('aria-pressed') === 'true';
+      saveBtn.setAttribute('aria-pressed', String(!pressed));
+      saveBtn.querySelector('svg').setAttribute('fill', !pressed ? 'currentColor' : 'none');
+      saveBtn.title = !pressed ? 'Saved' : 'Save';
+    });
+
+    // Built-in sample data (replace with your recommendation results). This build only includes UofT. Use ?id=uoft or omit the parameter.
+    const SAMPLE = {
+      uoft: {
+        id: 'uoft',
+        name: 'University of Toronto',
+        location: 'Ontario · Toronto',
+        type: 'Public',
+        coop: 'Co-op Extensive',
+        food: 'Meal Plan Available',
+        city: 'City Campus',
+        image: 'https://www.toronto.ca/wp-content/uploads/2017/07/96b4-University-College.png',
+        applyUrl: 'https://future.utoronto.ca/how-to-apply',
+        map: { lat: 43.6629, lng: -79.3957, zoom: 15 },
+        rep_program: 'Engineering / AI',
+        rep_qs_world: '#29 (QS 2026)',
+        rep_qs_ca: '#1 (QS 2026)',
+        rep_usnews_global: '#16 (2025–26)',
+        rep_usnews_ca: '#1 (Canada)',
+        acceptance: '43%',
+        intl: '29%',
+        rating: '4.6',
+        about: 'One of the world\'s top research universities, located in downtown Toronto, with close integration of research and industry, rich employment and internship opportunities.',
+        strengths: 'AI, Engineering, Business',
+        outcomes: 'High graduate employability with strong industry links in the GTA',
+        programs: ['Computer Engineering (Co-op)','Electrical Engineering','Computer Science','Economics','Rotman Commerce'],
+        faculties: ['Engineering','Arts & Science','Rotman','Medicine'],
+        tuition: 6590,
+        living: 1800,
+        extra: 1000,
+        scholarships: ['Entrance Scholarship · up to $2,000','Merit-based Awards · up to $5,000'],
+        requirements: 'Complete high school courses and meet specified prerequisite subject requirements (such as advanced math/physics/chemistry, etc.)',
+        language: 'IELTS 6.5 (no less than 6 in each component) or equivalent',
+        timeline: [
+          {date:'Oct 1', text:'Online application opens'},
+          {date:'Jan 15', text:'OUAC deadline for Ontario high school applicants'},
+          {date:'Mar–Apr', text:'Typical admission decisions window'},
+          {date:'Jun 1', text:'Earliest common offer response date in Ontario'}
+        ],
+        coopDetail: 'Engineering offers the Professional Experience Year (PEY) paid internship, typically 12–16 months; additional co-op options across campuses.',
+        partners: ['IBM','NVIDIA','Apple','Shopify'],
+        reviews: ['High course intensity but many opportunities','Convenient downtown living','Strong academic atmosphere'],
+        address: "27 King's College Cir, Toronto, ON M5S, Canada"
+      }
+    };
+
+    // Support external injection of window.UNI_DATA, otherwise based on id parameter or default uoft
+    const external = window.UNI_DATA;
+    const id = (getQueryParam('id') || '').toLowerCase();
+    const data = external || SAMPLE[id] || SAMPLE.uoft;
+    setUniversity(data);
+    initOSM(data);
+  </script>
+</body>
+</html>
