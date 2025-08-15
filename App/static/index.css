@@ -13,6 +13,17 @@ body{
     padding: 20px;
     background-color: #f9f8f4; /* A soft yellow for highlighting */
     border-radius: 8px; /* Adjust this value for more or less rounding */
+
+}
+h2{
+    text-align: center;
+    font-family: "Montserrat";
+    font-size: 40px;
+    
+}
+p{
+    text-align: center;
+    font-size: 20px;
     
 }
 .Interact-Zone{
@@ -83,7 +94,7 @@ hr{
 .bottom-link .btn.primary {
     display: inline-block;
     padding: 15px 30px;
-    font-size: 18px;
+    font-size: 25px;
     text-decoration: none;
     color: white;
     background-color: #0072ce;
