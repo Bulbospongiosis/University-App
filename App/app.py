@@ -96,6 +96,46 @@ def form7():
 
     return render_template("form7.html")
 
+@app.route("/McGill")
+def mcgill_detail():
+    return render_template("McGill.html")
+
+@app.route("/McMaster")
+def mcmaster_detail():
+    return render_template("McMaster.html")
+
+@app.route("/QueensUni")
+def queensuni_detail():
+    return render_template("QueensUni.html")
+
+@app.route("/UBC")
+def ubc_detail():
+    return render_template("UBC.html")
+
+@app.route("/UofM")
+def uofm_detail():
+    return render_template("/Université-de-Montréal.html")
+
+@app.route("/UofA")
+def uofa_detail():
+    return render_template("University-of-Alberta.html")
+
+@app.route("/UofC")
+def uofc_detail():
+    return render_template("University-of-Calgary.html")
+
+@app.route("/UofW")
+def uofw_detail():
+    return render_template("University-of-Waterloo.html")
+
+@app.route("/UofT")
+def uoft_detail():
+    return render_template("UofT.html")
+
+@app.route("/WesternUni")
+def westernuni_detail():
+    return render_template("Western-University.html")
+
 
 
 
